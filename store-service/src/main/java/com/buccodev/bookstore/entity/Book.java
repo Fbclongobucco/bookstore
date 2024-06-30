@@ -3,6 +3,7 @@ package com.buccodev.bookstore.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -10,6 +11,9 @@ import com.buccodev.bookstore.entity.enuns.Category;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -21,9 +25,14 @@ import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "tb_book")
-public class Book extends AbstractEntity{
+public class Book {
 
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID id;
 	
 	@Column(nullable = false, length = 100)
 	private String title;
@@ -50,11 +59,12 @@ public class Book extends AbstractEntity{
 	inverseJoinColumns = @JoinColumn(name = "author_id"))
 	private Set<Author> authors = new HashSet<>();
 	
+	
 	public Book() {
 	}
 
 	public Book(UUID id, String title, LocalDate date, BigDecimal price, Integer quantityStock, Category category, Publisher publisher) {
-		super(id);
+		this.id = id;
 		this.title = title;
 		this.date = date;
 		this.price = price;
@@ -64,6 +74,14 @@ public class Book extends AbstractEntity{
 		
 	}
 
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
 
 	public void setCategory(Integer category) {
 		this.category = category;
@@ -122,5 +140,24 @@ public class Book extends AbstractEntity{
 	public Set<Author> getAuthors() {
 		return authors;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Book other = (Book) obj;
+		return Objects.equals(id, other.id);
+	}
+	
+	
 	
 }

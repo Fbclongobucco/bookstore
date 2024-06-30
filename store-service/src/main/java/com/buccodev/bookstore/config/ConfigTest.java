@@ -1,12 +1,12 @@
-package com.buccodev.bookstore;
+package com.buccodev.bookstore.config;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Configuration;
 
 import com.buccodev.bookstore.entity.Author;
 import com.buccodev.bookstore.entity.Book;
@@ -16,10 +16,9 @@ import com.buccodev.bookstore.repositories.AuthorRepository;
 import com.buccodev.bookstore.repositories.BookRepository;
 import com.buccodev.bookstore.repositories.PublisherRepository;
 
-@SpringBootTest
-class BookstoreApplicationTests {
+@Configuration
+public class ConfigTest implements CommandLineRunner{
 	
-
 	@Autowired
 	private PublisherRepository publisherRepo;
 	
@@ -29,9 +28,8 @@ class BookstoreApplicationTests {
 	@Autowired
 	private AuthorRepository authorRepository;
 
-	@Test
-	void contextLoads() {
-		
+	@Override
+	public void run(String... args) throws Exception {
 		Publisher publisher1 = new Publisher(null, "Abril", "Brazil");
 		Publisher publisher2 = new Publisher(null, "Globo", "Brazil");
 		
@@ -57,6 +55,10 @@ class BookstoreApplicationTests {
 		
 	
 		bookRepository.saveAll(Arrays.asList(book1, book2));
+		
 	}
+	
+	
+	
 
 }

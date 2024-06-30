@@ -2,11 +2,15 @@ package com.buccodev.bookstore.entity;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -14,9 +18,14 @@ import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "tb_author")
-public class Author extends AbstractEntity {
+public class Author {
 
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID id;
 	
 	@Column(nullable = false, length = 100)
 	private String name;
@@ -36,10 +45,20 @@ public class Author extends AbstractEntity {
 	}
 
 	public Author(UUID id, String name, String country, LocalDate birthday) {
-		super(id);
+		this.id = id;
 		this.name = name;
 		this.country = country;
 		this.birthday = birthday;
+	}
+	
+	
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -69,6 +88,22 @@ public class Author extends AbstractEntity {
 	public Set<Book> getBooks() {
 		return books;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Author other = (Author) obj;
+		return Objects.equals(id, other.id);
+	}
 	
 }

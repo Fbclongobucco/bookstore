@@ -11,11 +11,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_publisher")
-public class Publisher {
+public class Client {
 
 	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
@@ -24,59 +22,100 @@ public class Publisher {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 	
-	@Column(nullable = false, length = 50, unique = true)
+	@Column(nullable = false, length = 100)
 	private String name;
+	 
+	@Column(nullable = false, length = 100, unique = true)
+	private String email;
 	
 	@Column(nullable = false, length = 100)
-	private String country;
+	private String cpf;
 	
-	@OneToMany(mappedBy = "publisher")
-	private Set<Book> books = new HashSet<>();
+	@Column(nullable = false, length = 50)
+	private String password;
 	
+	@OneToMany
+	Set<Card> cards = new HashSet<>();
 	
-	public Publisher() {
-	}
+	@OneToMany
+	Set<Address> address = new HashSet<>();
 
-	public Publisher(UUID id, String name, String country) {
+
+	public Client() {
+		
+	}
+	
+	
+	public Client(UUID id, String name, String email, String cpf, String password, Set<Card> cards) {
 		this.id = id;
 		this.name = name;
-		this.country = country;
+		this.email = email;
+		this.cpf = cpf;
+		this.password = password;
+		this.cards = cards;
 	}
-	
-	
+
 
 	public UUID getId() {
 		return id;
 	}
 
+
 	public void setId(UUID id) {
 		this.id = id;
 	}
+
 
 	public String getName() {
 		return name;
 	}
 
+
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public String getCountry() {
-		return country;
+
+	public String getEmail() {
+		return email;
 	}
 
-	public void setCountry(String country) {
-		this.country = country;
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	
-	public Set<Book> getBooks() {
-		return books;
+
+
+	public String getCpf() {
+		return cpf;
 	}
+
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+
+	public String getPassword() {
+		return password;
+	}
+
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+	public Set<Card> getCards() {
+		return cards;
+	}
+
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -86,7 +125,7 @@ public class Publisher {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Publisher other = (Publisher) obj;
+		Client other = (Client) obj;
 		return Objects.equals(id, other.id);
 	}
 	
