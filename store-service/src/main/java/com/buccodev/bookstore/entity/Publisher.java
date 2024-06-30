@@ -43,7 +43,6 @@ public class Publisher {
 		this.country = country;
 	}
 	
-	
 
 	public UUID getId() {
 		return id;
