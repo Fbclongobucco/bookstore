@@ -1,4 +1,4 @@
-package com.buccodev.bookstore.entity;
+package com.buccodev.bookstore.entity.enuns;
 
 public enum FlagCard {
 	

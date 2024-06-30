@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.buccodev.bookstore.entity.enuns.FlagCard;
 import com.buccodev.bookstore.entity.enuns.PayMethod;
 
 import jakarta.persistence.Column;
