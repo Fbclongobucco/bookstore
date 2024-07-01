@@ -1,5 +1,6 @@
 package com.buccodev.bookstore.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 import com.buccodev.bookstore.entity.enuns.Category;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,9 +27,9 @@ import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "tb_book")
-public class Book {
+public class Book implements Serializable{
 
-	@SuppressWarnings("unused")
+	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -53,7 +55,7 @@ public class Book {
 	@JoinColumn(name = "publisher_id")
 	private Publisher publisher;
 	
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.ALL})
 	@JoinTable(name = "tb_book_author",
 	joinColumns = @JoinColumn(name="book_id"),
 	inverseJoinColumns = @JoinColumn(name = "author_id"))

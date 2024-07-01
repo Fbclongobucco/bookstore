@@ -1,5 +1,6 @@
 package com.buccodev.bookstore.entity;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,9 +16,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_publisher")
-public class Publisher {
+public class Publisher implements Serializable {
 
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 	
 	@Id

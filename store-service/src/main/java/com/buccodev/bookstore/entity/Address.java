@@ -40,9 +40,9 @@ public class Address implements Serializable{
 	private String complement;
 	
 	
-	  @OneToOne
-	  @JoinColumn(name = "client_id") 
-	  private Client client;
+	@OneToOne
+	@JoinColumn(name = "client_id") 
+	private Client client;
 	  
 	 
 	public Address() {
