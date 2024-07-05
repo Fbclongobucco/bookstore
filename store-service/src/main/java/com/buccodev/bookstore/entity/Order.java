@@ -41,10 +41,12 @@ public class Order implements Serializable{
 	private Instant instant;
 	
 	@Temporal(TemporalType.DATE)
+	@Column(nullable = true)
 	private LocalDate deliveryDate;
 
 
-	@OneToOne
+	@ManyToOne
+	@JoinColumn(name = "address_id")
 	private Address addressDelivery;
 
 	@Column(nullable = false)
@@ -65,12 +67,9 @@ public class Order implements Serializable{
 		super();
 	}
 
-	public Order(UUID id, Instant instant, LocalDate deliveryDate,  Address addressDelivery,
-			PaymentMethod methodPayment, Client client) {
+	public Order(UUID id, Instant instant, PaymentMethod methodPayment, Client client) {
 		this.id = id;
 		this.instant = instant;
-		this.deliveryDate = deliveryDate;
-		this.addressDelivery = addressDelivery;
 		this.client = client;
 		this.setOrderStatus(StatusPayment.WAINTING_PAYMENT);
 		this.setMethodPayment(methodPayment);

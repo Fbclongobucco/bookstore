@@ -7,6 +7,7 @@ public enum FlagCard {
 	private Integer code;
 
 	FlagCard(Integer code) {
+		this.code = code;
 	}
 
 	public Integer getCode() {

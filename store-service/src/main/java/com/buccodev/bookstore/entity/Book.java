@@ -10,19 +10,7 @@ import java.util.UUID;
 
 import com.buccodev.bookstore.entity.enuns.Category;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 
 
 @Entity
@@ -54,14 +42,17 @@ public class Book implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "publisher_id")
 	private Publisher publisher;
-	
+
+	@OneToMany(mappedBy = "id.book", cascade = CascadeType.ALL)
+	private Set<OrderItem> itens = new HashSet<>();
+
 	@ManyToMany(cascade = {CascadeType.ALL})
 	@JoinTable(name = "tb_book_author",
 	joinColumns = @JoinColumn(name="book_id"),
 	inverseJoinColumns = @JoinColumn(name = "author_id"))
 	private Set<Author> authors = new HashSet<>();
-	
-	
+
+
 	public Book() {
 	}
 
@@ -73,7 +64,7 @@ public class Book implements Serializable{
 		this.quantityStock = quantityStock;
 		this.publisher = publisher;
 		this.setCategory(category);
-		
+
 	}
 
 
@@ -130,7 +121,7 @@ public class Book implements Serializable{
 			this.category = category.getCode();
 		}
 	}
-	
+
 	public Publisher getPublisher() {
 		return publisher;
 	}
@@ -138,9 +129,13 @@ public class Book implements Serializable{
 	public void setPublisher(Publisher publisher) {
 		this.publisher = publisher;
 	}
-	
+
 	public Set<Author> getAuthors() {
 		return authors;
+	}
+
+	public Set<OrderItem> getItens() {
+		return itens;
 	}
 
 	@Override

@@ -23,8 +23,8 @@ public class OrderItem implements Serializable{
 	@Column(nullable = false)
 	private Integer quantity;
 	
-	@Column(nullable = false, precision = 10)
-	private BigDecimal totalPrice = sumTotal();
+	@Column(nullable = true, precision = 10)
+	private BigDecimal totalPrice;
 	
 	public OrderItem() {
 		
@@ -34,8 +34,10 @@ public class OrderItem implements Serializable{
 		id.setOrder(order);
 		id.setBook(book);
 		this.quantity = quantity;
+		setTotalPrice();
 	}
-	
+
+
 	public Order getOrder() {
 		return id.getOrder();
 	}
@@ -64,14 +66,15 @@ public class OrderItem implements Serializable{
 		return totalPrice;
 	}
 
-
-	public BigDecimal sumTotal() {
-		return id.getBook().getPrice().multiply(BigDecimal.valueOf(quantity));
+	public void setTotalPrice() {
+		BigDecimal mult = new BigDecimal(quantity);
+		this.totalPrice = this.getBook().getPrice().multiply(mult);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		// Ensure proper hashCode() implementation in OrderItemPK
+		return Objects.hash(id != null ? id.hashCode() : 0, quantity);
 	}
 
 	@Override
@@ -83,7 +86,7 @@ public class OrderItem implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		OrderItem other = (OrderItem) obj;
-		return Objects.equals(id, other.id);
+		return Objects.equals(id, other.id) && Objects.equals(quantity, other.quantity);
 	}
 
 }
