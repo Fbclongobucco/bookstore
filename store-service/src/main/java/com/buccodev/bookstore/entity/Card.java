@@ -39,10 +39,10 @@ public class Card implements Serializable{
 	private String cvc;
 	
 	@Column(nullable = false)
-	private PayMethod payMethod;
+	private Integer payMethod;
 	
 	@Column(nullable = false)
-	private FlagCard flag;
+	private Integer flag;
 	
 	
 	@ManyToOne
@@ -53,8 +53,7 @@ public class Card implements Serializable{
 	public Card() {
 		
 	}
-	
-	
+
 	public Card(UUID id, Client client, String numCard, LocalDate validity, String cvc, PayMethod payMethod,
 			FlagCard flag) {
 		this.id = id;
@@ -62,8 +61,8 @@ public class Card implements Serializable{
 		this.numCard = numCard;
 		this.validity = validity;
 		this.cvc = cvc;
-		this.payMethod = payMethod;
-		this.flag = flag;
+		this.setPayMethod(payMethod);
+		this.setFlag(flag);
 	}
 
 
@@ -116,22 +115,22 @@ public class Card implements Serializable{
 
 
 	public PayMethod getPayMethod() {
-		return payMethod;
+		return PayMethod.valueOf(payMethod);
 	}
 
 
 	public void setPayMethod(PayMethod payMethod) {
-		this.payMethod = payMethod;
+		this.payMethod = payMethod.getCode();
 	}
 
 
 	public FlagCard getFlag() {
-		return flag;
+		return FlagCard.valueOf(flag);
 	}
 
 
 	public void setFlag(FlagCard flag) {
-		this.flag = flag;
+		this.flag = flag.getCode();
 	}
 
 

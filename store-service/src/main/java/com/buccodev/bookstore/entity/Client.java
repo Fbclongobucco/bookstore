@@ -49,13 +49,14 @@ public class Client implements Serializable{
 	 
 	public Client() {
 	}
-	
-	public Client(UUID id, String name) {
-		super();
+
+	public Client(UUID id, String name, String email, String cpf, String password) {
 		this.id = id;
 		this.name = name;
+		this.email = email;
+		this.cpf = cpf;
+		this.password = password;
 	}
-
 
 	public UUID getId() {
 		return id;
