@@ -42,15 +42,16 @@ public class Order implements Serializable{
 	
 	@Temporal(TemporalType.DATE)
 	private LocalDate deliveryDate;
-	
-	@Column(nullable = false)
-	private StatusPayment orderStatus;
-	
+
+
 	@OneToOne
 	private Address addressDelivery;
-	
+
 	@Column(nullable = false)
-	private PaymentMethod methodPayment;
+	private Integer orderStatus;
+
+	@Column(nullable = false)
+	private Integer methodPayment;
 	
 	@ManyToOne
 	@JoinColumn(name = "client_id")
@@ -69,10 +70,10 @@ public class Order implements Serializable{
 		this.id = id;
 		this.instant = instant;
 		this.deliveryDate = deliveryDate;
-		this.orderStatus = StatusPayment.WAINTING_PAYMENT;
 		this.addressDelivery = addressDelivery;
-		this.methodPayment = methodPayment;
 		this.client = client;
+		this.setOrderStatus(StatusPayment.WAINTING_PAYMENT);
+		this.setMethodPayment(methodPayment);
 	}
 
 	
@@ -100,28 +101,12 @@ public class Order implements Serializable{
 		this.deliveryDate = deliveryDate;
 	}
 
-	public StatusPayment getOrderStatus() {
-		return orderStatus;
-	}
-
-	public void setOrderStatus(StatusPayment orderStatus) {
-		this.orderStatus = orderStatus;
-	}
-
 	public Address getAddressDelivery() {
 		return addressDelivery;
 	}
 
 	public void setAddressDelivery(Address addressDelivery) {
 		this.addressDelivery = addressDelivery;
-	}
-
-	public PaymentMethod getMethodPayment() {
-		return methodPayment;
-	}
-
-	public void setMethodPayment(PaymentMethod methodPayment) {
-		this.methodPayment = methodPayment;
 	}
 
 	public Client getClient() {
@@ -134,6 +119,24 @@ public class Order implements Serializable{
 
 	public Set<OrderItem> getItens() {
 		return itens;
+	}
+
+	public StatusPayment getOrderStatus() {
+		return StatusPayment.valueOf(orderStatus);
+	}
+
+	public void setOrderStatus(StatusPayment orderStatus) {
+		this.orderStatus = orderStatus.getCode();
+	}
+
+	public PaymentMethod getMethodPayment() {
+		return PaymentMethod.valueOf(methodPayment);
+	}
+
+	public void setMethodPayment(PaymentMethod methodPayment) {
+		if(methodPayment != null){
+			this.methodPayment = methodPayment.getCode();
+		}
 	}
 
 	@Override

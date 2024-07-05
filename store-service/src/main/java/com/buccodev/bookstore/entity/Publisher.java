@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +31,7 @@ public class Publisher implements Serializable {
 	@Column(nullable = false, length = 100)
 	private String country;
 	
-	@OneToMany(mappedBy = "publisher")
+	@OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL)
 	private Set<Book> books = new HashSet<>();
 	
 	

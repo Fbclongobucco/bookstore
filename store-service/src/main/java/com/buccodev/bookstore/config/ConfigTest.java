@@ -52,7 +52,7 @@ public class ConfigTest implements CommandLineRunner{
 		book1.getAuthors().add(author1);
 		book2.getAuthors().add(author2);
 		
-		
+		publisher1.getBooks().add(book2);
 	
 		bookRepository.saveAll(Arrays.asList(book1, book2));
 		

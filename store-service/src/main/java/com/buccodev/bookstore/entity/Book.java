@@ -159,7 +159,5 @@ public class Book implements Serializable{
 		Book other = (Book) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
-	
+
 }
