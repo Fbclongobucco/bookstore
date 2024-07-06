@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.buccodev.bookstore.entity.enuns.Category;
 
-
-public class ConfigTest {
+@Configuration
+public class ConfigTest implements CommandLineRunner{
 
 	@Autowired
 	private PublisherRepository publisherRepo;
@@ -71,41 +71,38 @@ public class ConfigTest {
 		// Associar orderItem com order1
 
 
-		// Associar address com cli1
+
 		cli1.getAddress().add(address);
 
-		// Associar card com cli1
+
 		cli1.getCards().add(card);
 
-		// Salvando entidades no banco de dados
+
 		publisherRepo.saveAll(Arrays.asList(publisher1, publisher2));
 		authorRepository.saveAll(Arrays.asList(author1, author2));
 		bookRepository.saveAll(Arrays.asList(book1, book2));
 
-		// Associar autores com livros
+
 		book1.getAuthors().add(author1);
 		book2.getAuthors().add(author2);
 
-		// Associar publisher com livros
+
 		publisher1.getBooks().add(book1);
 		publisher2.getBooks().add(book2);
 
-		// Salvando livros atualizados
+
 		bookRepository.saveAll(Arrays.asList(book1, book2));
 
-		// Salvando cliente
+
 		clientRepository.save(cli1);
 
-		// Salvando endereço
+
 		addressRepository.save(address);
 
-		// Salvando cartão
+
 		cardRepository.save(card);
 
-		// Salvando orderItem
-		orderItemRepository.save(orderItem);
 
-		// Salvando order
 		orderRepository.save(order1);
 	}
 }
