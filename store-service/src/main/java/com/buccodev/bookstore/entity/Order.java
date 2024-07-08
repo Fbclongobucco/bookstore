@@ -58,8 +58,9 @@ public class Order implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	private Client client;
-	
-	@OneToMany(mappedBy = "id.order", cascade = CascadeType.ALL)
+
+
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
 	private Set<OrderItem> itens = new HashSet<>();
 	
 	

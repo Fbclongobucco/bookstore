@@ -17,7 +17,7 @@ public enum StatusPayment {
 	public static StatusPayment valueOf(Integer code){
 
 		for (StatusPayment value : StatusPayment.values()){
-			if(value.getCode() == code){
+			if(value.getCode().equals(code)){
 				return value;
 			}
 		}

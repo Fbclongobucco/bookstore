@@ -85,7 +85,7 @@ public class Card implements Serializable{
 
 
 	public String getNumCard() {
-		return numCard;
+		return this.numCard;
 	}
 
 

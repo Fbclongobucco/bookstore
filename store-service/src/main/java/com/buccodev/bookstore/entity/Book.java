@@ -43,7 +43,7 @@ public class Book implements Serializable{
 	@JoinColumn(name = "publisher_id")
 	private Publisher publisher;
 
-	@OneToMany(mappedBy = "id.book", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "book")
 	private Set<OrderItem> itens = new HashSet<>();
 
 	@ManyToMany(cascade = {CascadeType.ALL})
@@ -74,10 +74,6 @@ public class Book implements Serializable{
 
 	public void setId(UUID id) {
 		this.id = id;
-	}
-
-	public void setCategory(Integer category) {
-		this.category = category;
 	}
 
 	public String getTitle() {

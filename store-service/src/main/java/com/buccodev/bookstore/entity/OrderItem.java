@@ -6,10 +6,7 @@ import java.util.Objects;
 
 import com.buccodev.bookstore.entity.pk.OrderItemPK;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_order_item")
@@ -19,39 +16,56 @@ public class OrderItem implements Serializable{
 	
 	@EmbeddedId
 	private OrderItemPK id = new OrderItemPK();
+
+	@ManyToOne
+	@MapsId("order")
+	@JoinColumn(name = "order_id")
+	private Order order;
+
+	@ManyToOne
+	@MapsId("book")
+	@JoinColumn(name = "book_id")
+	private Book book;
 	
 	@Column(nullable = false)
 	private Integer quantity;
 	
-	@Column(nullable = true, precision = 10)
+	@Column(nullable = true, precision = 10, scale = 2)
 	private BigDecimal totalPrice;
-	
-	public OrderItem() {
-		
-	}
-	
-	public OrderItem(Order order, Book book, Integer quantity) {
-		id.setOrder(order);
-		id.setBook(book);
-		this.quantity = quantity;
-		setTotalPrice();
+
+	public OrderItem(){
 	}
 
+	public OrderItem(Order order, Book book, Integer quantity) {
+		this.id.setOrder(order);
+		this.id.setBook(book);
+		this.quantity = quantity;
+		this.totalPrice= sumTotal();
+
+	}
+
+	public OrderItemPK getId() {
+		return id;
+	}
+
+	public void setId(OrderItemPK id) {
+		this.id = id;
+	}
 
 	public Order getOrder() {
-		return id.getOrder();
+		return order;
 	}
-	
-	public void serOrder(Order order) {
-		id.setOrder(order);
+
+	public void setOrder(Order order) {
+		this.order = order;
 	}
-	
+
 	public Book getBook() {
-		return id.getBook();
+		return book;
 	}
-	
+
 	public void setBook(Book book) {
-		id.setBook(book);
+		this.book = book;
 	}
 
 	public Integer getQuantity() {
@@ -66,27 +80,25 @@ public class OrderItem implements Serializable{
 		return totalPrice;
 	}
 
-	public void setTotalPrice() {
-		BigDecimal mult = new BigDecimal(quantity);
-		this.totalPrice = this.getBook().getPrice().multiply(mult);
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public BigDecimal sumTotal() {
+		return id.getBook().getPrice().multiply(BigDecimal.valueOf(quantity));
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		OrderItem orderItem = (OrderItem) o;
+		return Objects.equals(id, orderItem.id);
 	}
 
 	@Override
 	public int hashCode() {
-		// Ensure proper hashCode() implementation in OrderItemPK
-		return Objects.hash(id != null ? id.hashCode() : 0, quantity);
+		return Objects.hashCode(id);
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		OrderItem other = (OrderItem) obj;
-		return Objects.equals(id, other.id) && Objects.equals(quantity, other.quantity);
-	}
-
 }
