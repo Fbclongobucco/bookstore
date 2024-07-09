@@ -6,6 +6,7 @@ import com.buccodev.bookstore.repositories.BookRepository;
 import com.buccodev.bookstore.services.exceptions.DataBaseException;
 import com.buccodev.bookstore.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

@@ -5,7 +5,9 @@ import com.buccodev.bookstore.repositories.OrderRepository;
 import com.buccodev.bookstore.services.exceptions.DataBaseException;
 import com.buccodev.bookstore.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,9 @@ import java.util.UUID;
 @Service
 public class OrderService {
 
+    @Autowired
     private OrderRepository repository;
+
 
     public UUID saveOrder(Order order){
 

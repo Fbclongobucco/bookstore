@@ -43,7 +43,7 @@ public class Book implements Serializable{
 	@JoinColumn(name = "publisher_id")
 	private Publisher publisher;
 
-	@OneToMany(mappedBy = "book")
+	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
 	private Set<OrderItem> itens = new HashSet<>();
 
 	@ManyToMany(cascade = {CascadeType.ALL})

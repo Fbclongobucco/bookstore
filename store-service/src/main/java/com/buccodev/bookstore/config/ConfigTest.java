@@ -11,6 +11,7 @@ import com.buccodev.bookstore.entity.enuns.FlagCard;
 import com.buccodev.bookstore.entity.enuns.PayMethod;
 import com.buccodev.bookstore.entity.enuns.PaymentMethod;
 import com.buccodev.bookstore.repositories.*;
+import com.buccodev.bookstore.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +46,9 @@ public class ConfigTest implements CommandLineRunner {
 	@Autowired
 	private CardRepository cardRepository;
 
+	@Autowired
+	private OrderService service;
+
 	@Transactional
 	public void run(String... args) throws Exception {
 
@@ -61,17 +65,21 @@ public class ConfigTest implements CommandLineRunner {
 		OrderItem item = new OrderItem(order, book, 2);
 		OrderItem item1 = new OrderItem(order, book, 3);
 
-		order.getItens().addAll(Arrays.asList(item, item1));
+		book.getItens().add(item);
+		book.getItens().add(item1);
 
-		bookRepository.save(book);
+
+		order.setDeliveryDate(LocalDate.of(2024, 8, 22));
+
+
 		publisherRepo.save(publisher);
 		clientRepository.save(client);
 
 
 
-		orderRepository.save(order);
+		service.saveOrder(order);
 
-
+		bookRepository.save(book);
 
 
 
