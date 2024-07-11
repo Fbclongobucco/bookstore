@@ -7,15 +7,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_author")
@@ -28,20 +21,20 @@ public class Author implements Serializable{
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 	
-	@Column(nullable = false, length = 100)
+	@Column(nullable = false, length = 100, unique = true)
 	private String name;
 	
 	@Column(nullable = false, length = 100)
 	private String country;
-	
+
 	@Temporal(TemporalType.DATE)
 	private LocalDate birthday;
-	
-	
-	@ManyToMany(mappedBy = "authors")
-	private Set<Book> books = new HashSet<>();
-	
-	
+
+	@JsonIgnore
+	@ManyToMany(mappedBy = "authors", cascade = CascadeType.ALL)
+    private Set<Book> books = new HashSet<>();
+
+
 	public Author() {
 	}
 
@@ -51,8 +44,8 @@ public class Author implements Serializable{
 		this.country = country;
 		this.birthday = birthday;
 	}
-	
-	
+
+
 
 	public UUID getId() {
 		return id;
@@ -106,5 +99,5 @@ public class Author implements Serializable{
 		Author other = (Author) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 }

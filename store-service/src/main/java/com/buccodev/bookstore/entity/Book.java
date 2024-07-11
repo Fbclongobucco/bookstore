@@ -21,7 +21,7 @@ public class Book implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 	
 	@Column(nullable = false, length = 100)
@@ -38,30 +38,27 @@ public class Book implements Serializable{
 	
 	@Column(nullable = false)
 	private Integer category;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "publisher_id")
 	private Publisher publisher;
 
-	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-	private Set<OrderItem> itens = new HashSet<>();
-
-	@ManyToMany(cascade = {CascadeType.ALL})
-	@JoinTable(name = "tb_book_author",
-	joinColumns = @JoinColumn(name="book_id"),
-	inverseJoinColumns = @JoinColumn(name = "author_id"))
+	@ManyToMany
+	@JoinTable(name = "tb_book_authors",
+	joinColumns = @JoinColumn(name = "book_id"),
+	inverseJoinColumns = @JoinColumn(name = "Author_id"))
 	private Set<Author> authors = new HashSet<>();
 
-
-	public Book() {
+	public Book(){
 	}
 
-	public Book(UUID id, String title, LocalDate date, BigDecimal price, Integer quantityStock, Category category, Publisher publisher) {
+
+	public Book(UUID id, String title, LocalDate date, BigDecimal price, Category category, Publisher publisher) {
 		this.id = id;
 		this.title = title;
 		this.date = date;
 		this.price = price;
-		this.quantityStock = quantityStock;
+		this.quantityStock = 0;
 		this.publisher = publisher;
 		this.setCategory(category);
 
@@ -128,10 +125,6 @@ public class Book implements Serializable{
 
 	public Set<Author> getAuthors() {
 		return authors;
-	}
-
-	public Set<OrderItem> getItens() {
-		return itens;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import com.buccodev.bookstore.entity.pk.OrderItemPK;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -52,16 +53,18 @@ public class OrderItem implements Serializable{
 		this.id = id;
 	}
 
+	@JsonIgnore
 	public Order getOrder() {
-		return order;
+		return id.getOrder();
 	}
 
 	public void setOrder(Order order) {
 		this.order = order;
 	}
 
+	@JsonIgnore
 	public Book getBook() {
-		return book;
+		return id.getBook();
 	}
 
 	public void setBook(Book book) {
