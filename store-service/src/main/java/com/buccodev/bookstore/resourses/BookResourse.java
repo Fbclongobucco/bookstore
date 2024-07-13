@@ -2,11 +2,11 @@ package com.buccodev.bookstore.resourses;
 
 import com.buccodev.bookstore.entity.Book;
 import com.buccodev.bookstore.entity.dto.BookDTO;
-import com.buccodev.bookstore.entity.dto.SaveBookDTO;
 import com.buccodev.bookstore.services.AuthorService;
 import com.buccodev.bookstore.services.BookService;
 import com.buccodev.bookstore.services.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +30,9 @@ public class BookResourse {
     @GetMapping
     public ResponseEntity<List<BookDTO>> getAllBooks() {
 
-        List<Book> books = service.findAllBooks();
+        List<BookDTO> books = service.findAllBooks();
 
-        List<BookDTO> booksResponse = books.stream().map(BookDTO::fromBook).toList();
-
-        return ResponseEntity.ok().body(booksResponse);
+        return ResponseEntity.ok().body(books);
     }
 
     @GetMapping("/{id}")
@@ -48,32 +46,33 @@ public class BookResourse {
 
     }
 
+    @GetMapping("/title/{title}")
+    public ResponseEntity<BookDTO> findByTitle(@PathVariable String title){
+
+        Book book = service.findBookByTitle(title);
+
+        BookDTO bookDTO = BookDTO.fromBook(book);
+
+        return ResponseEntity.ok().body(bookDTO);
+
+    }
+
 
     @PostMapping
-    public ResponseEntity<Void> saveBook(@RequestBody SaveBookDTO saveDto) {
+    public ResponseEntity<Void> saveBook(@RequestBody BookDTO bookDTO) {
+
+        service.saveBook(bookDTO);
 
 
-        Book book = BookDTO.toBookFromDto(saveDto.bookDTO());
 
-        saveDto.authors().forEach(author -> book.getAuthors().add(author));
-
-        book.setPublisher(saveDto.publisher());
-
-        publisherService.savePublisher(saveDto.publisher());
-
-        saveDto.authors().forEach(authors -> authorService.saveAuthor(authors));
-
-        service.saveBook(book);
-
-        return ResponseEntity.ok().build();
-
+        return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateBook(@PathVariable UUID id, @RequestBody BookDTO bookDTO) {
 
-        service.updateBook(id, BookDTO.toBookFromDto(bookDTO));
+        service.updateBook(id, bookDTO);
 
         return  ResponseEntity.ok().build();
     }

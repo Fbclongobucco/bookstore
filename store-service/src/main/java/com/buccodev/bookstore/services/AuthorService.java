@@ -2,6 +2,7 @@ package com.buccodev.bookstore.services;
 
 import com.buccodev.bookstore.entity.Author;
 import com.buccodev.bookstore.entity.Book;
+import com.buccodev.bookstore.entity.dto.AuthorDTO;
 import com.buccodev.bookstore.repositories.AuthorRepository;
 import com.buccodev.bookstore.services.exceptions.DataBaseException;
 import com.buccodev.bookstore.services.exceptions.ResourceNotFoundException;
@@ -10,6 +11,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,13 +25,11 @@ public class AuthorService {
     private AuthorRepository repository;
 
 
-    public UUID saveAuthor(Author author){
+    public UUID saveAuthor(AuthorDTO authorDTO){
 
         try{
 
-            UUID uuid = repository.save(author).getId();
-
-            return uuid;
+            return repository.save(AuthorDTO.toAuthorFromDto(authorDTO)).getId();
 
         } catch (DataIntegrityViolationException | ConstraintViolationException e){
 
@@ -38,17 +38,19 @@ public class AuthorService {
         }
     }
 
-    public Author findAddressById(UUID id){
+    public Author findAuthorById(UUID id){
 
-        Optional<Author> author = repository.findById(id);
+        var author = repository.findById(id);
 
-        return author.orElseThrow(()-> new ResourceNotFoundException(id));
+        return author.orElseThrow(()-> new ResourceNotFoundException("Resource "+id+" not found!"));
 
     }
 
-    public List<Author> findAllAuthors(){
+    public List<AuthorDTO> findAllAuthors(){
 
-        return repository.findAll();
+        List<Author> authors = repository.findAll();
+
+        return authors.stream().map(AuthorDTO::fromAuthor).toList();
     }
 
     public void deleteAuthorById(UUID id){
@@ -66,15 +68,21 @@ public class AuthorService {
 
     }
 
+    public Author findByNameAuthor(String name){
+
+        return repository.findByName(name).orElseThrow(()->new ResourceNotFoundException("Resource "+name+" Not found"));
+
+    }
+
     public Author updateAuthor(UUID id, Author newAuthor){
 
         try{
 
-            Author author = repository.findById(id).get();
+            Optional<Author> author = repository.findById(id);
 
-            updateData(author, newAuthor);
+            updateData(author.get(), newAuthor);
 
-            return repository.save(author);
+            return repository.save(author.get());
 
         }  catch (EntityNotFoundException e){
 

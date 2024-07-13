@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
@@ -34,7 +35,7 @@ public class Publisher implements Serializable {
 	private String country;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "publisher")
 	private Set<Book> books = new HashSet<>();
 	
 	

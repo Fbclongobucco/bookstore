@@ -9,26 +9,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
-public record BookDTO(String title, LocalDate localDate, BigDecimal price, Category category, Integer quantityStock, Publisher publisher, Set<Author> authors) {
+public record BookDTO(String title, LocalDate localDate, BigDecimal price, Category category, Integer quantityStock, Set<Author> authors, Publisher publisher) {
 
 
 
-    public Book toBook() {
-        Book book = new Book(
-                null,
-                this.title(),
-                this.localDate(),
-                this.price(),
-                this.category(),
-                this.publisher()
-        );
-
-
-        book.getAuthors().addAll(this.authors());
-
-        return book;
-
-    }
 
     public static BookDTO fromBook(Book book) {
         return new BookDTO(
@@ -37,20 +21,21 @@ public record BookDTO(String title, LocalDate localDate, BigDecimal price, Categ
                 book.getPrice(),
                 book.getCategory(),
                 book.getQuantityStock(),
-                book.getPublisher(),
-                book.getAuthors()
+                book.getAuthors(),
+                book.getPublisher()
         );
     }
 
     public static Book toBookFromDto(BookDTO bookDto) {
-        return new Book(
-                null,
-                bookDto.title(),
-                bookDto.localDate(),
-                bookDto.price(),
-                bookDto.category(),
-                null
-        );
+        Book book = new Book();
+        book.setTitle(bookDto.title());
+        book.setDate(bookDto.localDate());
+        book.setPrice(bookDto.price());
+        book.setQuantityStock(bookDto.quantityStock());
+        book.setCategory(bookDto.category());
+        book.setPublisher(bookDto.publisher());
+        book.getAuthors().addAll(bookDto.authors());
+        return book;
     }
 
 

@@ -7,6 +7,7 @@ import com.buccodev.bookstore.services.exceptions.DataBaseException;
 import com.buccodev.bookstore.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @Service
 public class PublisherService {
 
+    @Autowired
     private PublisherRepository repository;
 
 
@@ -25,9 +27,7 @@ public class PublisherService {
 
         try{
 
-            UUID uuid = repository.save(publisher).getId();
-
-            return uuid;
+            return repository.save(publisher).getId();
 
         } catch (DataIntegrityViolationException | ConstraintViolationException e){
 
@@ -38,13 +38,21 @@ public class PublisherService {
 
     public Publisher findPublisherById(UUID id){
 
-        Optional<Publisher> order = repository.findById(id);
+        var publisher = repository.findById(id);
 
-        return order.orElseThrow(()-> new ResourceNotFoundException(id));
+        return publisher.orElseThrow(()-> new ResourceNotFoundException(id));
 
     }
 
-    public List<Publisher> findAllClient(){
+    public Publisher findByName(String title){
+
+        var publisher = repository.findByName(title);
+
+        return publisher.orElseThrow(()-> new ResourceNotFoundException(title));
+
+    }
+
+    public List<Publisher> findAllPublisher(){
 
         return repository.findAll();
     }
@@ -53,6 +61,7 @@ public class PublisherService {
 
         try {
             repository.deleteById(id);
+
         } catch (EmptyResultDataAccessException e){
 
             throw new ResourceNotFoundException(id);
@@ -64,26 +73,22 @@ public class PublisherService {
 
     }
 
-    public Publisher updateOrder(UUID id, Publisher newPublisher){
+    public Publisher updatePublisher(UUID id, Publisher newPublisher){
 
-        try{
-            Publisher publisher = repository.findById(id).get();
+            Publisher publisher = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException(id));
 
             updateData(publisher, newPublisher);
 
             return repository.save(publisher);
 
-        }  catch (EntityNotFoundException e){
 
-            throw new ResourceNotFoundException(id);
-
-        }
     }
 
     private void updateData(Publisher oldPublisher, Publisher newPublisher) {
 
         oldPublisher.setCountry(newPublisher.getCountry());
-        oldPublisher.setName(newPublisher.getName());;
+
+        oldPublisher.setName(newPublisher.getName());
 
     }
 

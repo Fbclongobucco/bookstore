@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import com.buccodev.bookstore.entity.enuns.Category;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 
@@ -39,10 +40,12 @@ public class Book implements Serializable{
 	@Column(nullable = false)
 	private Integer category;
 
+	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name = "publisher_id")
 	private Publisher publisher;
 
+	@JsonManagedReference
 	@ManyToMany
 	@JoinTable(name = "tb_book_authors",
 	joinColumns = @JoinColumn(name = "book_id"),

@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -31,7 +32,7 @@ public class Author implements Serializable{
 	private LocalDate birthday;
 
 	@JsonIgnore
-	@ManyToMany(mappedBy = "authors", cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "authors")
     private Set<Book> books = new HashSet<>();
 
 
