@@ -12,6 +12,7 @@ import com.buccodev.bookstore.entity.enuns.PaymentMethod;
 import com.buccodev.bookstore.entity.enuns.StatusPayment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -54,12 +55,13 @@ public class Order implements Serializable{
 
 	@Column(nullable = false)
 	private Integer methodPayment;
-	
+
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	private Client client;
 
-
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
 	private Set<OrderItem> itens = new HashSet<>();
 	

@@ -1,12 +1,14 @@
 package com.buccodev.bookstore.services;
 
-import com.buccodev.bookstore.entity.Card;
+import com.buccodev.bookstore.entity.Address;
 import com.buccodev.bookstore.entity.Client;
+import com.buccodev.bookstore.entity.dto.ClientDTO;
 import com.buccodev.bookstore.repositories.ClientRepository;
 import com.buccodev.bookstore.services.exceptions.DataBaseException;
 import com.buccodev.bookstore.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -18,12 +20,15 @@ import java.util.UUID;
 @Service
 public class ClientService {
 
+    @Autowired
     private ClientRepository repository;
 
 
-    public UUID saveClient(Client client){
+    public UUID saveClient(ClientDTO clientDTO){
 
         try{
+
+            Client client = ClientDTO.toClientFromDTO(clientDTO);
 
             UUID uuid = repository.save(client).getId();
 
@@ -67,6 +72,7 @@ public class ClientService {
     public Client updateClient(UUID id, Client newClient){
 
         try{
+
 
             Client client = repository.findById(id).get();
 
