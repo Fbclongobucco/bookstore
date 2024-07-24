@@ -30,9 +30,7 @@ public class ClientService {
 
             Client client = ClientDTO.toClientFromDTO(clientDTO);
 
-            UUID uuid = repository.save(client).getId();
-
-            return uuid;
+            return repository.save(client).getId();
 
         } catch (DataIntegrityViolationException | ConstraintViolationException e){
 
@@ -49,15 +47,18 @@ public class ClientService {
 
     }
 
-    public List<Client> findAllClient(){
+    public List<ClientDTO> findAllClient(){
 
-        return repository.findAll();
+        List<Client> clients = repository.findAll();
+
+        return clients.stream().map(ClientDTO::fromClient).toList();
     }
 
     public void deleteClientById(UUID id){
 
         try {
             repository.deleteById(id);
+
         } catch (EmptyResultDataAccessException e){
 
             throw new ResourceNotFoundException(id);

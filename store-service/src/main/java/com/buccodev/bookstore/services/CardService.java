@@ -1,6 +1,7 @@
 package com.buccodev.bookstore.services;
 
 import com.buccodev.bookstore.entity.Card;
+import com.buccodev.bookstore.entity.dto.CardDTO;
 import com.buccodev.bookstore.repositories.CardRepository;
 import com.buccodev.bookstore.services.exceptions.DataBaseException;
 import com.buccodev.bookstore.services.exceptions.ResourceNotFoundException;
@@ -20,13 +21,13 @@ public class CardService {
     private CardRepository repository;
 
 
-    public UUID saveCard(Card card){
+    public UUID saveCard(CardDTO cardDTO){
 
         try{
 
-            UUID uuid = repository.save(card).getId();
+            Card card = CardDTO.toCardFromDTO(cardDTO);
 
-            return uuid;
+            return repository.save(card).getId();
 
         } catch (DataIntegrityViolationException | ConstraintViolationException e){
 
@@ -36,18 +37,20 @@ public class CardService {
     }
 
 
-    public Card findCardById(UUID id){
+    public CardDTO findCardById(UUID id){
 
-        Optional<Card> book = repository.findById(id);
+        Card card = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException(id));
 
-        return book.orElseThrow(()-> new ResourceNotFoundException(id));
+        return CardDTO.fromCard(card);
 
     }
 
 
-    public List<Card> findAllCards(){
+    public List<CardDTO> findAllCards(){
 
-        return repository.findAll();
+        List<Card> cards = repository.findAll();
+
+        return cards.stream().map(CardDTO::fromCard).toList();
     }
 
     public void deleteCardById(UUID id){
@@ -65,15 +68,17 @@ public class CardService {
 
     }
 
-    public Card updateCard(UUID id, Card newCard){
+    public void updateCard(UUID id, CardDTO newCardDTO){
 
         try{
+
+            Card newCard = CardDTO.toCardFromDTO(newCardDTO);
 
             Card card = repository.findById(id).get();
 
             updateData(card, newCard);
 
-            return repository.save(card);
+           repository.save(card);
 
         }  catch (EntityNotFoundException e){
 
@@ -89,7 +94,6 @@ public class CardService {
         oldCard.setNumCard(newCard.getNumCard());
         oldCard.setCvc(newCard.getCvc());
         oldCard.setValidity(newCard.getValidity());
-
 
     }
 
