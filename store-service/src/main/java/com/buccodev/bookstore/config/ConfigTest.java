@@ -58,6 +58,7 @@ public class ConfigTest implements CommandLineRunner {
 
 		Order order = new Order(null, Instant.now(), PaymentMethod.CREDIT, client);
 
+		order.setAddressDelivery(client.getAddress().stream().findFirst().get());
 
 		Book book = new Book(null, "O quinze", LocalDate.of(1923, 12, 9), BigDecimal.valueOf(56), Category.AUTOBIOGRAPH, publisher);
 		Book book2 = new Book(null, "Dom Casmurro", LocalDate.of(1923, 12, 9), BigDecimal.valueOf(20),  Category.ROMANCE, publisher);
@@ -83,13 +84,13 @@ public class ConfigTest implements CommandLineRunner {
 		publisherRepo.save(publisher);
 		clientRepository.save(client);
 
-		order.setAddressDelivery(address);
+
 
 
 		bookRepository.save(book);
 		bookRepository.save(book2);
 
-		service.saveOrder(order);
+		orderRepository.save(order);
 		clientRepository.save(client);
 
 

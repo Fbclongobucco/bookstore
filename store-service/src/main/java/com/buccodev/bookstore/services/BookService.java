@@ -3,7 +3,9 @@ package com.buccodev.bookstore.services;
 import com.buccodev.bookstore.entity.Author;
 import com.buccodev.bookstore.entity.Book;
 import com.buccodev.bookstore.entity.Publisher;
+import com.buccodev.bookstore.entity.dto.AuthorDTO;
 import com.buccodev.bookstore.entity.dto.BookDTO;
+import com.buccodev.bookstore.entity.dto.PublisherDTO;
 import com.buccodev.bookstore.repositories.AuthorRepository;
 import com.buccodev.bookstore.repositories.BookRepository;
 import com.buccodev.bookstore.repositories.PublisherRepository;
@@ -44,19 +46,20 @@ public class BookService {
         book.setDate(bookDTO.localDate());
         book.setTitle(bookDTO.title());
 
-        List<Author> authors = bookDTO.authors().stream().toList();
+        List<Author> authors = bookDTO.authors().stream().map(AuthorDTO::toAuthorFromDto).toList();
 
         for (Author author : authors) {
 
-            var a = authorRepository.existsByName(author.getName());
+            var existsByName = authorRepository.existsByName(author.getName());
 
-            if (a) {
+            if (existsByName) {
 
                 book.getAuthors().add(authorRepository.findByName(author.getName()).get());
 
                 author.getBooks().add(book);
 
             } else {
+
                 var salved = authorRepository.save(author);
 
                 book.getAuthors().add(salved);
@@ -68,18 +71,19 @@ public class BookService {
 
         }
 
-        var test = publisherRepository.existsByName(bookDTO.publisher().getName());
+        var test = publisherRepository.existsByName(bookDTO.publisher().name());
 
         Publisher publisher = null;
 
         if (test) {
-            publisher = publisherRepository.findByName(bookDTO.publisher().getName()).get();
+
+            publisher = publisherRepository.findByName(bookDTO.publisher().name()).get();
 
             publisher.getBooks().add(book);
 
         } else {
 
-            publisher = publisherRepository.save(bookDTO.publisher());
+            publisher = publisherRepository.save(PublisherDTO.toPublisherFromDTO(bookDTO.publisher()));
 
             publisher.getBooks().add(book);
         }
@@ -113,8 +117,11 @@ public class BookService {
         List<BookDTO> bookDTOS = new ArrayList<>();
 
         for (Book book : books) {
+
             BookDTO bookDTO = new BookDTO(book.getTitle(), book.getDate(), book.getPrice(),
-                    book.getCategory(), book.getQuantityStock(), book.getAuthors(), book.getPublisher());
+                    book.getCategory(), book.getQuantityStock(),
+                    book.getAuthors().stream().map(AuthorDTO::fromAuthor).toList(),
+                    PublisherDTO.fromPublisher(book.getPublisher()));
 
             bookDTOS.add(bookDTO);
         }
@@ -161,7 +168,7 @@ public class BookService {
         oldBook.setCategory(newBookDTO.category());
         oldBook.setDate(newBookDTO.localDate());
         oldBook.setPrice(newBookDTO.price());
-        oldBook.setPublisher(newBookDTO.publisher());
+        oldBook.setPublisher(PublisherDTO.toPublisherFromDTO(newBookDTO.publisher()));
         oldBook.setTitle(newBookDTO.title());
 
     }

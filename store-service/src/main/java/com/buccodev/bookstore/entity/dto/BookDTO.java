@@ -7,11 +7,11 @@ import com.buccodev.bookstore.entity.enuns.Category;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
-public record BookDTO(String title, LocalDate localDate, BigDecimal price, Category category, Integer quantityStock, Set<Author> authors, Publisher publisher) {
-
-
+public record BookDTO(String title, LocalDate localDate, BigDecimal price, Category category, Integer quantityStock, List<AuthorDTO> authors, PublisherDTO
+        publisher) {
 
 
     public static BookDTO fromBook(Book book) {
@@ -21,8 +21,8 @@ public record BookDTO(String title, LocalDate localDate, BigDecimal price, Categ
                 book.getPrice(),
                 book.getCategory(),
                 book.getQuantityStock(),
-                book.getAuthors(),
-                book.getPublisher()
+                book.getAuthors().stream().map(AuthorDTO::fromAuthor).toList(),
+                PublisherDTO.fromPublisher(book.getPublisher())
         );
     }
 
@@ -33,8 +33,8 @@ public record BookDTO(String title, LocalDate localDate, BigDecimal price, Categ
         book.setPrice(bookDto.price());
         book.setQuantityStock(bookDto.quantityStock());
         book.setCategory(bookDto.category());
-        book.setPublisher(bookDto.publisher());
-        book.getAuthors().addAll(bookDto.authors());
+        book.setPublisher(PublisherDTO.toPublisherFromDTO(bookDto.publisher()));
+        book.getAuthors().addAll(bookDto.authors().stream().map(AuthorDTO::toAuthorFromDto).toList());
         return book;
     }
 

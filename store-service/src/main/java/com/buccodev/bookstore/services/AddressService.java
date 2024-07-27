@@ -1,6 +1,7 @@
 package com.buccodev.bookstore.services;
 
 import com.buccodev.bookstore.entity.Address;
+import com.buccodev.bookstore.entity.dto.AddressDTO;
 import com.buccodev.bookstore.repositories.AddressRepository;
 import com.buccodev.bookstore.services.exceptions.DataBaseException;
 import com.buccodev.bookstore.services.exceptions.ResourceNotFoundException;
@@ -22,12 +23,13 @@ public class AddressService {
     private  AddressRepository repository;
 
 
-    public UUID saveAddress(Address address){
+    public UUID saveAddress(AddressDTO addressDTO){
 
        try{
-           UUID uuid = repository.save(address).getId();
-           
-           return uuid;
+
+           Address address = AddressDTO.toAddressFroDTO(addressDTO);
+
+           return repository.save(address).getId();
 
        } catch (DataIntegrityViolationException | ConstraintViolationException e){
 
@@ -37,11 +39,11 @@ public class AddressService {
        
     }
 
-    public Address findAddressById(UUID id){
+    public AddressDTO findAddressById(UUID id){
 
-            Optional<Address> address = repository.findById(id);
+            Address address = repository.findById(id).orElseThrow(()->new ResourceNotFoundException(id));
 
-            return address.orElseThrow(()-> new ResourceNotFoundException(id));
+            return AddressDTO.fromAddress(address);
 
     }
 
@@ -54,6 +56,7 @@ public class AddressService {
 
         try {
             repository.deleteById(id);
+
         } catch (EmptyResultDataAccessException e){
 
             throw new ResourceNotFoundException(id);
@@ -65,29 +68,23 @@ public class AddressService {
 
     }
 
-    public Address updateAddress(UUID id, Address newAddress){
+    public void updateAddress(UUID id, AddressDTO newAddress){
 
-      try{
-
-          Address address = repository.findById(id).get();
+          Address address = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException(id));
 
           updateData(address, newAddress);
 
-         return repository.save(address);
+          repository.save(address);
 
-      }  catch (EntityNotFoundException e){
 
-          throw new ResourceNotFoundException(id);
-
-      }
     }
 
-    private void updateData(Address oldAddress, Address newAddress){
-        oldAddress.setCity(newAddress.getCity());
-        oldAddress.setComplement(newAddress.getComplement());
-        oldAddress.setNumber(newAddress.getNumber());
-        oldAddress.setNeighborhood(newAddress.getNeighborhood());
-        oldAddress.setStreet(newAddress.getStreet());
+    private void updateData(Address oldAddress, AddressDTO newAddress){
+        oldAddress.setCity(newAddress.city());
+        oldAddress.setComplement(newAddress.complement());
+        oldAddress.setNumber(newAddress.number());
+        oldAddress.setNeighborhood(newAddress.neighborhood());
+        oldAddress.setStreet(newAddress.street());
     }
 
 }

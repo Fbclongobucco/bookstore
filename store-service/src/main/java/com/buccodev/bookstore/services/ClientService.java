@@ -2,11 +2,12 @@ package com.buccodev.bookstore.services;
 
 import com.buccodev.bookstore.entity.Address;
 import com.buccodev.bookstore.entity.Client;
+import com.buccodev.bookstore.entity.dto.AddressDTO;
 import com.buccodev.bookstore.entity.dto.ClientDTO;
+import com.buccodev.bookstore.repositories.AddressRepository;
 import com.buccodev.bookstore.repositories.ClientRepository;
 import com.buccodev.bookstore.services.exceptions.DataBaseException;
 import com.buccodev.bookstore.services.exceptions.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,6 +23,9 @@ public class ClientService {
 
     @Autowired
     private ClientRepository repository;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
 
     public UUID saveClient(ClientDTO clientDTO){
@@ -70,30 +74,55 @@ public class ClientService {
 
     }
 
-    public Client updateClient(UUID id, Client newClient){
-
-        try{
+    public void updateClient(UUID id, ClientDTO clientDTO){
 
 
-            Client client = repository.findById(id).get();
+            Client client = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException(id));
 
-            updateData(client, newClient);
+            updateData(client, clientDTO);
 
-            return repository.save(client);
+            repository.save(client);
 
-        }  catch (EntityNotFoundException e){
-
-            throw new ResourceNotFoundException(id);
-
-        }
     }
 
-    private void updateData(Client oldClient, Client newClient) {
+    public void addAddress(UUID idClient, AddressDTO addressDTO){
 
-        oldClient.setCpf(newClient.getCpf());
-        oldClient.setEmail(newClient.getEmail());
-        oldClient.setName(newClient.getName());
-        oldClient.setPassword(newClient.getPassword());
+        Address address = AddressDTO.toAddressFroDTO(addressDTO);
+
+        Client client = repository.findById(idClient).orElseThrow(()-> new ResourceNotFoundException(idClient));
+
+        client.getAddress().add(address);
+
+        address.setClient(client);
+
+        addressRepository.save(address);
+
+        repository.save(client);
+
+    }
+
+    public void removeAddress(UUID idClient, UUID idAddress ){
+
+
+        Client client = repository.findById(idClient).orElseThrow(()-> new ResourceNotFoundException(idClient));
+
+
+        client.getAddress().removeIf(address -> address.getId().equals(idAddress));
+
+
+        addressRepository.deleteById(idAddress);
+
+        repository.save(client);
+
+
+    }
+
+    private void updateData(Client oldClient, ClientDTO newClient) {
+
+        oldClient.setCpf(newClient.cpf());
+        oldClient.setEmail(newClient.email());
+        oldClient.setName(newClient.name());
+        oldClient.setPassword(newClient.password());
     }
 
 }

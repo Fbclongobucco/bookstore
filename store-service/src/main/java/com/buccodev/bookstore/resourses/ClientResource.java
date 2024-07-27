@@ -1,6 +1,7 @@
 package com.buccodev.bookstore.resourses;
 
 import com.buccodev.bookstore.entity.Client;
+import com.buccodev.bookstore.entity.dto.AddressDTO;
 import com.buccodev.bookstore.entity.dto.ClientDTO;
 import com.buccodev.bookstore.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,9 @@ public class ClientResource {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateClient(@PathVariable UUID id, @RequestBody ClientDTO clientDTO){
 
-        Client client = ClientDTO.toClientFromDTO(clientDTO);
 
-        service.updateClient(id, client);
+
+        service.updateClient(id, clientDTO);
 
         return ResponseEntity.ok().build();
     }
@@ -61,6 +62,23 @@ public class ClientResource {
         service.deleteClientById(id);
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/address")
+    public ResponseEntity<Void> addAddress(@PathVariable UUID id, @RequestBody AddressDTO addressDTO){
+
+        service.addAddress(id, addressDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @DeleteMapping("/{idClient}/address/{idAddress}")
+    public ResponseEntity<Void> deleteAddress(@PathVariable UUID idClient, @PathVariable UUID idAddress ){
+
+        service.removeAddress(idClient, idAddress);
+
+        return ResponseEntity.ok().build();
+
     }
 
 }

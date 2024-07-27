@@ -1,19 +1,12 @@
 package com.buccodev.bookstore.entity;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_client")
@@ -37,12 +30,13 @@ public class Client implements Serializable{
 	@Column(nullable = false, length = 50)
 	private String password;
 	
-	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL) 
+	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
 	private Set<Card> cards = new HashSet<>();
 	 
 	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-	private Set<Address> address = new HashSet<>(); 
-	
+	private Set<Address> address = new HashSet<>();
+
+
 	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
 	private Set<Order> orders = new HashSet<>();
 	
@@ -101,9 +95,6 @@ public class Client implements Serializable{
 		this.password = password;
 	}
 
-	public Set<Card> getCards() {
-		return cards;
-	}
 
 	public Set<Address> getAddress() {
 		return address;

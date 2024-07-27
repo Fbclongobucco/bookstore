@@ -3,10 +3,7 @@ package com.buccodev.bookstore.entity;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import com.buccodev.bookstore.entity.enuns.PaymentMethod;
 import com.buccodev.bookstore.entity.enuns.StatusPayment;
@@ -45,9 +42,8 @@ public class Order implements Serializable{
 	@Column(nullable = true)
 	private LocalDate deliveryDate;
 
-
 	@ManyToOne
-	@JoinColumn(name = "address_id")
+	@JoinColumn(name = "addressDelivery_id")
 	private Address addressDelivery;
 
 	@Column(nullable = false)
@@ -67,7 +63,6 @@ public class Order implements Serializable{
 	
 	
 	public Order() {
-		super();
 	}
 
 	public Order(UUID id, Instant instant, PaymentMethod methodPayment, Client client) {
