@@ -1,5 +1,6 @@
 package com.buccodev.bookstore.services;
 
+import com.buccodev.bookstore.entity.Book;
 import com.buccodev.bookstore.entity.Client;
 import com.buccodev.bookstore.entity.Order;
 import com.buccodev.bookstore.entity.OrderItem;
@@ -45,6 +46,22 @@ public class OrderService {
         Order order = OrderDTO.toOrderFromDTO(orderDTO);
 
         Client client = clientRepository.findById(orderDTO.idClient()).orElseThrow(()-> new ResourceNotFoundException(orderDTO.idClient()));
+
+        for(OrdemItemDTO ordemItemDTO : orderDTO.ordemItemDTOS()){
+
+            Book book = bookRepository.findById(ordemItemDTO.idBook()).
+                    orElseThrow(()-> new ResourceNotFoundException(ordemItemDTO.idBook()));
+
+            OrderItem orderItem = new OrderItem(order, book, ordemItemDTO.quantity());
+
+            order.getItens().add(orderItem);
+
+            orderItemRepository.save(orderItem);
+
+
+
+
+        }
 
         order.setClient(client);
 

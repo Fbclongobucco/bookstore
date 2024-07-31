@@ -19,7 +19,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -59,7 +58,7 @@ public class Order implements Serializable{
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-	private Set<OrderItem> itens = new HashSet<>();
+	private List<OrderItem> itens = new ArrayList<>();
 	
 	
 	public Order() {
@@ -114,7 +113,7 @@ public class Order implements Serializable{
 		this.client = client;
 	}
 
-	public Set<OrderItem> getItens() {
+	public List<OrderItem> getItens() {
 		return itens;
 	}
 
