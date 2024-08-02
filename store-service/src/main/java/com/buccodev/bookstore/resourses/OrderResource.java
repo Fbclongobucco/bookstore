@@ -37,13 +37,6 @@ public class OrderResource {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<Void> addOrdersItens(@PathVariable UUID id, @RequestBody List<OrdemItemDTO> ordemItemDTOS){
-
-        service.addOrdenItens(id, ordemItemDTOS);
-
-        return ResponseEntity.ok().build();
-    }
 
 
 

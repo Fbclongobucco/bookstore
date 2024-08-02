@@ -34,6 +34,14 @@ public class ClientService {
 
             Client client = ClientDTO.toClientFromDTO(clientDTO);
 
+            List<AddressDTO> addressDTOS = clientDTO.addresses().stream().toList();
+
+            List<Address> addresses = addressDTOS.stream().map(AddressDTO::toAddressFroDTO).toList();
+
+            client.getAddress().addAll(addresses);
+
+            addressRepository.saveAll(addresses);
+
             return repository.save(client).getId();
 
         } catch (DataIntegrityViolationException | ConstraintViolationException e){
