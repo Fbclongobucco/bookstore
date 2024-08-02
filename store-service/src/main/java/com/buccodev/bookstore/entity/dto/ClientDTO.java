@@ -4,9 +4,10 @@ import com.buccodev.bookstore.entity.Address;
 import com.buccodev.bookstore.entity.Client;
 import com.buccodev.bookstore.entity.Order;
 
+import java.util.List;
 import java.util.Set;
 
-public record ClientDTO(String name, String email, String cpf, String password, Set<Address> addresses, Set<Order> orders) {
+public record ClientDTO(String name, String email, String cpf, String password, List<AddressDTO> addresses, List<Order> orders) {
 
         public static ClientDTO fromClient(Client client){
 
@@ -15,7 +16,7 @@ public record ClientDTO(String name, String email, String cpf, String password, 
                     client.getEmail(),
                     client.getCpf(),
                     client.getPassword(),
-                    client.getAddress(),
+                    client.getAddress().stream().map(AddressDTO::fromAddress).toList(),
                     client.getOrders()
             );
 

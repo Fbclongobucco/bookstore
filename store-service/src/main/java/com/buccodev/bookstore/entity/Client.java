@@ -3,10 +3,7 @@ package com.buccodev.bookstore.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_client")
@@ -31,14 +28,14 @@ public class Client implements Serializable{
 	private String password;
 	
 	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-	private Set<Card> cards = new HashSet<>();
+	private List<Card> cards = new ArrayList<>();
 	 
 	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-	private Set<Address> address = new HashSet<>();
+	private List<Address> address = new ArrayList<>();
 
 
 	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-	private Set<Order> orders = new HashSet<>();
+	private List<Order> orders = new ArrayList<>();
 	
 	 
 	public Client() {
@@ -96,12 +93,12 @@ public class Client implements Serializable{
 	}
 
 
-	public Set<Address> getAddress() {
+	public List<Address> getAddress() {
 		return address;
 	}
 
 
-	public Set<Order> getOrders() {
+	public List<Order> getOrders() {
 		return orders;
 	}
 

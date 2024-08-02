@@ -3,7 +3,7 @@ package com.buccodev.bookstore.entity.dto;
 import com.buccodev.bookstore.entity.Address;
 import com.buccodev.bookstore.entity.Client;
 
-public record AddressDTO(String city, String neighborhood, String street, String number, String complement, Client client) {
+public record AddressDTO(String city, String neighborhood, String street, String number, String complement, ClientDTO client) {
 
 
     public static AddressDTO fromAddress(Address address){
@@ -13,7 +13,7 @@ public record AddressDTO(String city, String neighborhood, String street, String
                 address.getStreet(),
                 address.getNumber(),
                 address.getComplement(),
-                address.getClient()
+                ClientDTO.fromClient(address.getClient())
         );
     }
 
@@ -25,7 +25,7 @@ public record AddressDTO(String city, String neighborhood, String street, String
                 addressDTO.street(),
                 addressDTO.number(),
                 addressDTO.complement(),
-                addressDTO.client()
+                ClientDTO.toClientFromDTO(addressDTO.client())
         );
     }
 

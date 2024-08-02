@@ -28,7 +28,7 @@ public class Publisher implements Serializable {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 	
-	@Column(nullable = false, length = 50, unique = true)
+	@Column(nullable = false, length = 50)
 	private String name;
 	
 	@Column(nullable = false, length = 100)
