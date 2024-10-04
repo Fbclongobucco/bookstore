@@ -59,12 +59,19 @@ public class ConfigTest implements CommandLineRunner {
 
 			publisherRepository.save(publisher);
 
+			Author author = new Author(null, faker.book().author(), "EUA", LocalDate.of(1923, 11, 2));
+
+
+
 			int valueCat = faker.number().numberBetween(0, 6);
 
 			Book book = new Book(null, faker.book().title() + faker.number().numberBetween(1, 32), LocalDate.of(1933, 3, 8),
 					new BigDecimal(faker.number().randomDouble(4,1, 4)), Category.valueOf(valueCat) , publisher
 					);
 			book.setQuantityStock(faker.number().numberBetween(1,20));
+			book.getAuthors().add(author);
+			author.getBooks().add(book);
+			authorRepository.save(author);
 
 			bookRepository.save(book);
 

@@ -5,6 +5,7 @@ import com.buccodev.bookstore.entity.dto.BookDTO;
 import com.buccodev.bookstore.services.AuthorService;
 import com.buccodev.bookstore.services.BookService;
 import com.buccodev.bookstore.services.PublisherService;
+import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +29,9 @@ public class BookResourse {
 
 
     @GetMapping
-    public ResponseEntity<List<BookDTO>> getAllBooks() {
+    public ResponseEntity<List<BookDTO>> getAllBooks(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
 
-        List<BookDTO> books = service.findAllBooks();
+        var books = service.findAllBooks(page, size);
 
         return ResponseEntity.ok().body(books);
     }

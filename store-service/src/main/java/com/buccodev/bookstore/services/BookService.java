@@ -16,6 +16,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -110,23 +113,21 @@ public class BookService {
         return book.orElseThrow(() -> new ResourceNotFoundException(title));
     }
 
-    public List<BookDTO> findAllBooks() {
+    public List<BookDTO> findAllBooks(Integer page, Integer size) {
 
-        List<Book> books = repository.findAll();
+        Pageable pageable = PageRequest.of(page, size);
 
-        List<BookDTO> bookDTOS = new ArrayList<>();
+        Page<Book> booksPage = repository.findAll(pageable);
 
-        for (Book book : books) {
-
-            BookDTO bookDTO = new BookDTO(book.getTitle(), book.getDate(), book.getPrice(),
-                    book.getCategory(), book.getQuantityStock(),
-                    book.getAuthors().stream().map(AuthorDTO::fromAuthor).toList(),
-                    PublisherDTO.fromPublisher(book.getPublisher()));
-
-            bookDTOS.add(bookDTO);
-        }
-
-        return bookDTOS;
+        return booksPage.stream().map(book -> new BookDTO(
+                book.getTitle(),
+                book.getDate(),
+                book.getPrice(),
+                book.getCategory(),
+                book.getQuantityStock(),
+                book.getAuthors().stream().map(AuthorDTO::fromAuthor).toList(),
+                PublisherDTO.fromPublisher(book.getPublisher())
+        )).toList();
     }
 
     public void deleteBookById(UUID id) {
